@@ -21,25 +21,82 @@
             display: flex;
             flex-direction: column;
             background: #fff;
-            overflow: hidden;
+            position: relative;
         }
  
         .chat-header {
-            background-color: #000;
+            background-color: #666;
             color: #fff;
-            padding: 15px;
-            text-align: center;
+            padding: 0 15px;
+            height: 60px;
+            display: flex;
+            align-items: center;
             font-size: 18px;
             font-weight: bold;
+            gap: 10px;
+        }
+ 
+        .chat-header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+ 
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: transparent;
+            color: #fff;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
         }
  
         .chat-messages {
             flex: 1;
-            overflow-y: auto;
+            overflow-y: scroll;
             padding: 15px;
             display: flex;
             flex-direction: column;
             gap: 15px;
+            max-height: 100%;
+            scrollbar-width: thin;
+            scrollbar-color: #888 #f1f1f1;
+        }
+ 
+        .chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+ 
+        .chat-messages::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 4px;
+        }
+ 
+        .chat-messages::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+            border-radius: 4px;
+        }
+ 
+        .bot-message-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+ 
+        .bot-name {
+            font-weight: bold;
+            margin-right: 5px;
+            margin-top: 10px;
+        }
+ 
+        .bot-message {
+            background-color: #f1f1f1;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            font-family: Arial, sans-serif;
         }
  
         .message {
@@ -56,114 +113,137 @@
             max-width: 70%;
         }
  
-        .bot-message {
-            display: flex;
-            align-items: flex-start;
-            background-color: #f1f1f1;
-            padding: 10px 15px;
-            border-radius: 15px;
-            max-width: 70%;
-        }
- 
-        .bot-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-image: url('templates/Avatar_male_07.jpg');
-            background-size: cover;
-            margin-right: 10px;
-        }
- 
-        .response-options {
-            padding: 15px;
-            border-top: 1px solid #ddd;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
- 
-        .response-options button {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
- 
-        .response-options button:hover {
-            background-color: #0056b3;
-        }
- 
         .input-container {
             display: flex;
+            align-items: center;
             padding: 10px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #e0e0e0;
+            background-color: #fff;
         }
  
-        .input-container input {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
+        .input-field {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            resize: none;
+            min-height: 50px;
+            max-height: 200px;
+            overflow-y: hidden;
+            transition: height 0.2s ease;
         }
  
-        .input-container button {
-            background-color: #007bff;
-            color: #fff;
+        .send-button {
+            background-color: transparent;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            font-size: 24px;
             cursor: pointer;
-            font-size: 14px;
             margin-left: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            transition: fill 0.2s ease, background-color 0.2s ease;
+        }
+ 
+        .send-button svg {
+            fill: #333;
+            transition: fill 0.2s ease;
+        }
+ 
+        .send-button:hover {
+            background-color: #d1d1d1;
+        }
+ 
+        .send-button:hover svg {
+            fill: #444;
+        }
+ 
+        .send-button:active {
+            background-color: #b0b0b0;
+        }
+ 
+        .send-button:active svg {
+            fill: #007bff;
         }
     </style>
     <script>
-        async function sendMessage(message = null) {
-            const input = document.querySelector('input');
-            if (!message) message = input.value;
-            if (!message) return;
- 
+        document.addEventListener("DOMContentLoaded", () => {
             const messagesContainer = document.querySelector('.chat-messages');
-            messagesContainer.innerHTML += `<div class="message user-message">${message}</div>`;
-            input.value = '';
+            const inputField = document.querySelector('.input-field');
+            const sendButton = document.querySelector('.send-button');
+            const startText = "Ich möchte einen Film aus der Rubrik \"Fantasy\" schauen. Gibt es hier Empfehlungen?";
  
-            const response = await fetch('/send', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message }),
+            inputField.value = startText;
+ 
+            function addUserMessage(text) {
+                const userMessageContainer = document.createElement('div');
+                userMessageContainer.classList.add('message', 'user-message');
+                userMessageContainer.textContent = text;
+                messagesContainer.appendChild(userMessageContainer);
+                scrollToBottom();
+            }
+ 
+            function addBotMessage(text) {
+                const botMessageContainer = document.createElement('div');
+                botMessageContainer.classList.add('bot-message-container');
+                botMessageContainer.innerHTML = `
+                    <div class="bot-name">Max:</div>
+                    <div class="bot-message">${text}</div>
+                `;
+                messagesContainer.appendChild(botMessageContainer);
+                scrollToBottom();
+            }
+ 
+            function scrollToBottom() {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+ 
+            sendButton.addEventListener('click', () => {
+                const userMessage = inputField.value;
+                if (userMessage.trim() !== "") {
+                    addUserMessage(userMessage);
+                    inputField.value = "";
+ 
+                    setTimeout(() => {
+                        addBotMessage("Oh, ich liebe Fantasy-Filme! Der Herr der Ringe: Die Gefährten ist einer meiner absoluten Favoriten – die epische Geschichte hat mich tief berührt. Auch Pan’s Labyrinth von Guillermo del Toro ist magisch und emotional. Beide Filme bieten unglaubliche Welten, die dich sicher begeistern werden! 😀");
+                    }, 1500);
+                }
             });
  
-            const data = await response.json();
-            messagesContainer.innerHTML += `<div class="message bot-message"><img class="bot-avatar" src="templates/Avatar_male_07.jpg" alt="ChatBot Avatar">${data.reply}</div>`;
+            inputField.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    sendButton.click();
+                }
+            });
  
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
+            inputField.addEventListener('input', () => {
+                inputField.style.height = 'auto';
+                inputField.style.height = inputField.scrollHeight + 'px';
+            });
+ 
+        });
     </script>
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-header">ChatBot Max</div>
-        <div class="chat-messages">
-            <div class="message user-message">Mich stört es, dass die Ausländer nur hierherkommen, um unseren Sozialstaat auszunutzen</div>
-            <div class="message bot-message">
-                <img class="bot-avatar" src="C:/Users/maike/Desktop/MA KI/chatbot-web/templates/Avatar_male_07.jpg" alt="ChatBot Avatar" style="width: 40px; height: 40px; border-radius: 50%; margin-right: 10px;">
-                Es gibt viele Missverständnisse rund um dieses Thema. Tatsächlich zeigen Studien, dass die meisten Menschen nicht nach Deutschland kommen, um Sozialleistungen zu beziehen. 😊 Die Hauptgründe für Migration sind oft wirtschaftlich, wie die Suche nach Arbeit oder besseren Bildungschancen, oder sie sind durch Flucht vor Krieg und Verfolgung bedingt. Außerdem leisten Migrantinnen und Migranten langfristig häufig einen wichtigen Beitrag, indem sie in das Sozialsystem einzahlen und in Bereichen arbeiten, in denen Fachkräfte gebraucht werden. Es gibt auch strenge rechtliche Vorgaben, wer überhaupt Anspruch auf Sozialleistungen hat.
-            </div>
+        <div class="chat-header">
+            <img src="/static/Avatar_male_07.jpg" alt="ChatBot Max">
+            ChatBot Max
+            <button class="close-button">×</button>
         </div>
-        <div class="response-options">
-            <button onclick="sendMessage('Was sind das für Studien?')">Was sind das für Studien?</button>
-            <button onclick="sendMessage('Welche rechtlichen Vorgaben gibt es?')">Welche rechtlichen Vorgaben gibt es?</button>
-            <button onclick="sendMessage('...')">....</button>
-        </div>
+        <div class="chat-messages"></div>
         <div class="input-container">
-            <input type="text" placeholder="Sende eine Nachricht an Max...">
-            <button onclick="sendMessage()">Senden</button>
+            <textarea class="input-field"></textarea>
+            <button class="send-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                    <path d="M2 2L22 12L2 22V16L16 12L2 8V2Z" />
+                </svg>
+            </button>
         </div>
     </div>
 </body>
