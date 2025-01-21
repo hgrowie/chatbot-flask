@@ -176,7 +176,7 @@
             const messagesContainer = document.querySelector('.chat-messages');
             const inputField = document.querySelector('.input-field');
             const sendButton = document.querySelector('.send-button');
-            const startText = "Ich möchte einen Film aus der Rubrik \"Action\" schauen. Gibt es hier Empfehlungen?";
+            const startText = "Ich möchte einen Film aus der Rubrik \"Thriller\" schauen. Gibt es hier Empfehlungen?";
  
             inputField.value = startText;
             
@@ -201,7 +201,36 @@
                 `;
                 messagesContainer.appendChild(botMessageContainer);
                 scrollToBottom();
+
+                let index = 0;
+
+                function typeMessage() {
+                    if (index < text.length) {
+                        botMessageElement.innerHTML += text[index];
+                        index++;
+                        setTimeout(typeMessage, 30);
+                        }
+                    }
+
+                    typeMessage();
             }
+
+
+                function addLoadingDots() {
+                    const loadingContainer = document.createElement('div');
+                    loadingContainer.classList.add('bot-message-container');
+
+                    const loadingDots = document.createElement('div');
+                    loadingDots.classList.add('loading-dots');
+                    loadingDots.innerHTML = '<span>.</span><span>.</span><span>.</span>';
+
+                    loadingContainer.appendChild(loadingDots);
+                    messagesContainer.appendChild(loadingContainer);
+                    scrollToBottom();
+
+                    return loadingContainer;
+                    }
+
  
             function scrollToBottom() {
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
@@ -214,8 +243,9 @@
                     inputField.value = "";
  
                     setTimeout(() => {
-                        addBotMessage("Oh, ich liebe Action-Filme! 'Mission Impossible - Fallout' ist einer meiner absoluten Favoriten – die epische Geschichte hat mich tief berührt. Auch 'Deadpool' von Tim Miller ist witzig und emotional. Beide Filme bieten eine spannende Story, die dich sicher begeistern wird!");
-                    }, 1500);
+                        messagesContainer.removeChild(loadingDots);
+                        addBotMessage("Oh, ich liebe Thriller😋! 'Fight Club' ist einer meiner absoluten Favoriten – die epische Geschichte hat mich tief berührt. Auch 'No Country for Old Men' von Ethan Coan ist witzig und emotional. Beide Filme bieten eine spannende Story, die dich sicher begeistern wird😀!");
+                    }, 3000);  //Latenzzeit auf 3 Sekunden
                 }
             });
  
@@ -249,3 +279,6 @@
                 </svg>
             </button>
         </div>
+    </div>
+</body>
+</html>
