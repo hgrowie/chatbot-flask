@@ -230,10 +230,13 @@
             function addBotMessage(text) {
                 const botMessageContainer = document.createElement('div');
                 botMessageContainer.classList.add('bot-message-container');
-                botMessageContainer.innerHTML = `
-                    <div class="bot-name">Anna:</div>
-                    <div class="bot-message">${text}</div>
-                `;
+                const botName = document.createElement('div');
+                botName.classList.add('bot-name');
+                botName.textContent = "Anna:";
+                const botMessageElement = document.createElement('div');
+                botMessageElement.classList.add('bot-message');
+                botMessageContainer.appendChild(botName);
+                botMessageContainer.appendChild(botMessageElement);
                 messagesContainer.appendChild(botMessageContainer);
                 scrollToBottom();
 
@@ -265,17 +268,14 @@
 
                     return loadingContainer;
                 }
-
- 
-            function scrollToBottom() {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
  
             sendButton.addEventListener('click', () => {
                 const userMessage = inputField.value;
                 if (userMessage.trim() !== "") {
                     addUserMessage(userMessage);
                     inputField.value = "";
+
+                    const loadingDots = addLoadingDots();
  
                     setTimeout(() => {
                         messagesContainer.removeChild(loadingDots);
@@ -294,7 +294,10 @@
                 inputField.style.height = 'auto';
                 inputField.style.height = inputField.scrollHeight + 'px';
             });
- 
+            
+            function scrollToBottom() {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
         });
     </script>
 </head>
