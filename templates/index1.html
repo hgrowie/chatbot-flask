@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot Anna</title>
+    <title>ChatBot</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -85,53 +85,12 @@
             gap: 10px;
         }
  
-        .bot-name {
-            font-weight: bold;
-            margin-right: 5px;
-            margin-top: 10px;
-        }
- 
         .bot-message {
             background-color: #f1f1f1;
             padding: 10px 15px;
             border-radius: 15px;
             max-width: 70%;
             font-family: Arial, sans-serif;
-        }
-
-        .loading-dots {
-            font-size: 32px;
-            font-weight: bold;
-            margin-left: 10px;
-            color: #007bff;
-            display: inline-block;
-        }
-
-        .loading-dots span {
-            animation: blink 1s infinite;
-        }
-
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes blink {
-            0% {
-                opacity: 0;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
         }
  
         .message {
@@ -212,12 +171,8 @@
             const inputField = document.querySelector('.input-field');
             const sendButton = document.querySelector('.send-button');
             const startText = "I would like to watch a movie from the category \"Thriller\". Are there any recommendations?";
- 
+
             inputField.value = startText;
-            
-            // Add a first bot message when the chat opens
-            const initialBotMessage = "Hello! I am Anna.";
-            addBotMessage(initialBotMessage);
  
             function addUserMessage(text) {
                 const userMessageContainer = document.createElement('div');
@@ -230,57 +185,26 @@
             function addBotMessage(text) {
                 const botMessageContainer = document.createElement('div');
                 botMessageContainer.classList.add('bot-message-container');
-                const botName = document.createElement('div');
-                botName.classList.add('bot-name');
-                botName.textContent = "Anna:";
-                const botMessageElement = document.createElement('div');
-                botMessageElement.classList.add('bot-message');
-                botMessageContainer.appendChild(botName);
-                botMessageContainer.appendChild(botMessageElement);
+                botMessageContainer.innerHTML = `
+                    <div class="bot-message">${text}</div>
+                `;
                 messagesContainer.appendChild(botMessageContainer);
                 scrollToBottom();
-
-                let index = 0;
-
-                function typeMessage() {
-                    if (index < text.length) {
-                        botMessageElement.innerHTML += text[index];
-                        index++;
-                        setTimeout(typeMessage, 30);
-                        }
-                    }
-
-                    typeMessage();
             }
-
-
-             function addLoadingDots() {
-                    const loadingContainer = document.createElement('div');
-                    loadingContainer.classList.add('bot-message-container');
-
-                    const loadingDots = document.createElement('div');
-                    loadingDots.classList.add('loading-dots');
-                    loadingDots.innerHTML = '<span>.</span><span>.</span><span>.</span>';
-
-                    loadingContainer.appendChild(loadingDots);
-                    messagesContainer.appendChild(loadingContainer);
-                    scrollToBottom();
-
-                    return loadingContainer;
-                }
+ 
+            function scrollToBottom() {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
  
             sendButton.addEventListener('click', () => {
                 const userMessage = inputField.value;
                 if (userMessage.trim() !== "") {
                     addUserMessage(userMessage);
                     inputField.value = "";
-
-                    const loadingDots = addLoadingDots();
  
                     setTimeout(() => {
-                        messagesContainer.removeChild(loadingDots);
-                        addBotMessage("Oh, I love thrillers 😋! 'Fight Club' is ony of my absolute favorites – the epic story touched me deeply. Ethan Coan's 'No Country for Old Men' is also funny and emotional. Both films offer an exciting story that is sure to inspire you😀!");
-                    }, 3000);  //Latenzzeit auf 3 Sekunden
+                        addBotMessage("Oh, I love thrillers! 'Fight Club' is ony of my absolute favorites – the epic story touched me deeply. Ethan Coan's 'No Country for Old Men' is also funny and emotional. Both films offer an exciting story that is sure to inspire you!");
+                    }, 1500);
                 }
             });
  
@@ -294,18 +218,14 @@
                 inputField.style.height = 'auto';
                 inputField.style.height = inputField.scrollHeight + 'px';
             });
-            
-            function scrollToBottom() {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
         });
     </script>
 </head>
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <img src="/static/Avatar_fem_02_02.jpg" alt="ChatBot Anna">
-            ChatBot Anna
+            <img src="/static/KI_Bild.png" alt="ChatBot">
+            ChatBot
             <button class="close-button">×</button>
         </div>
         <div class="chat-messages"></div>
