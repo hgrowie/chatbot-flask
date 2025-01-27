@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -93,41 +93,6 @@
             font-family: Arial, sans-serif;
         }
 
-        .loading-dots {
-            font-size: 32px;
-            font-weight: bold;
-            margin-left: 10px;
-            color: #007bff;
-            display: inline-block;
-        }
-
-        .loading-dots span {
-            animation: blink 1s infinite;
-        }
-
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes blink {
-            0% {
-                opacity: 0;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1);
-            }
-        }
-
         .message {
             display: flex;
             align-items: flex-start;
@@ -205,7 +170,7 @@
             const messagesContainer = document.querySelector('.chat-messages');
             const inputField = document.querySelector('.input-field');
             const sendButton = document.querySelector('.send-button');
-            const startText = "Ich möchte einen Film aus der Rubrik 'Fantasy' schauen. Gibt es hier Empfehlungen?";
+            const startText = "Ich möchte einen Film aus der Rubrik 'Comedy' schauen. Gibt es hier Empfehlungen?";
 
             inputField.value = startText;
 
@@ -224,36 +189,23 @@
                 const botMessageElement = document.createElement('div');
                 botMessageElement.classList.add('bot-message');
                 botMessageContainer.appendChild(botMessageElement);
-
                 messagesContainer.appendChild(botMessageContainer);
-                scrollToBottom();
 
                 let index = 0;
 
                 function typeMessage() {
                     if (index < text.length) {
-                        botMessageElement.innerHTML += text[index];
+                        botMessageElement.textContent += text[index];
                         index++;
-                        setTimeout(typeMessage, 30);
+                        setTimeout(typeMessage, 30); // Buchstabe für Buchstabe mit 30ms Verzögerung
                     }
                 }
 
                 typeMessage();
             }
 
-            function addLoadingDots() {
-                const loadingContainer = document.createElement('div');
-                loadingContainer.classList.add('bot-message-container');
-
-                const loadingDots = document.createElement('div');
-                loadingDots.classList.add('loading-dots');
-                loadingDots.innerHTML = '<span>.</span><span>.</span><span>.</span>';
-
-                loadingContainer.appendChild(loadingDots);
-                messagesContainer.appendChild(loadingContainer);
-                scrollToBottom();
-
-                return loadingContainer;
+            function scrollToBottom() {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
 
             sendButton.addEventListener('click', () => {
@@ -262,12 +214,8 @@
                     addUserMessage(userMessage);
                     inputField.value = "";
 
-                    const loadingDots = addLoadingDots();
-
-                    setTimeout(() => {
-                        messagesContainer.removeChild(loadingDots);
-                        addBotMessage("'Eragon - Das Vermächtnis der Drachenreiter' und 'Der goldene Kompass' sind empfohlene Filme im Fantasy-Genre. Beide bieten spannende Geschichten, beeindruckende visuelle Effekte und faszinierende Welten. Diese Filme gehören zu den Klassikern und sind bei Fans sehr beliebt.");
-                    }, 3000); // Latenzzeit auf 3 Sekunden
+                    const botResponse = "'Die Ritter der Kokosnuss' und 'Pretty Woman' sind empfohlene Filme im Comedy-Genre. Beide bieten spannende Geschichten, beeindruckende visuelle Effekte und faszinierende Welten. Diese Filme gehören zu den Klassikern und sind bei Fans sehr beliebt.";
+                    addBotMessage(botResponse);
                 }
             });
 
@@ -281,10 +229,6 @@
                 inputField.style.height = 'auto';
                 inputField.style.height = inputField.scrollHeight + 'px';
             });
-
-            function scrollToBottom() {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            }
         });
     </script>
 </head>
@@ -307,4 +251,3 @@
     </div>
 </body>
 </html>
->
