@@ -10,6 +10,21 @@ def home():
 # API-Route für den Chatbot
 @app.route('/send', methods=['POST'])
 
+		def send():
+		    data = request.get_json()
+		    user_message = data.get('message', '')
+		
+		    # Bot-Logik
+		    if "Studien" in user_message:
+		        reply = "Es gibt viele Studien, die zeigen, dass Migration oft wirtschaftliche Gründe hat."
+		    elif "rechtlichen Vorgaben" in user_message:
+		        reply = "Es gibt strenge rechtliche Vorgaben, wer Sozialleistungen beziehen darf."
+		    elif "..." in user_message:
+		        reply = "Bitte stelle eine spezifischere Frage, damit ich besser antworten kann."
+		    else:
+		        reply = "Ich verstehe deine Frage nicht ganz. Kannst du sie bitte genauer formulieren?"
+		
+		    return jsonify({'reply': reply})
 
 if __name__ == '__main__':
     import os
