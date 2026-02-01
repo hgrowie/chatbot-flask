@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot Anna</title>
+    <title>ChatBot Alex</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,29 +12,29 @@
             background-color: #f9f9f9;
         }
  
-        .chat-container {
-            width: 400px;
-            height: 600px;
-            margin: 50px auto;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            background: #fff;
-            position: relative;
-        }
+      .chat-container {
+    width: 1280px;
+    height: 720px;
+    margin: 40px auto;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    position: relative;
+}
  
-        .chat-header {
-            background-color: #666;
-            color: #fff;
-            padding: 0 15px;
-            height: 80px;
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-            gap: 10px;
-        }
+   .chat-header {
+    background-color: #666;
+    color: #fff;
+    padding: 0 20px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    font-size: 20px;
+    font-weight: bold;
+    gap: 12px;
+}
  
         .chat-header img {
             width: 75px;
@@ -91,14 +91,14 @@
             margin-top: 10px;
         }
  
-        .bot-message {
-            background-color: #f1f1f1;
-            padding: 10px 15px;
-            border-radius: 15px;
-            max-width: 70%;
-            font-family: Arial, sans-serif;
-        }
-
+   .bot-message {
+    background-color: #f1f1f1;
+    padding: 10px 15px;
+    border-radius: 15px;
+    max-width: 70%;
+    font-family: Arial, sans-serif;
+    white-space: pre-line;
+}
         .loading-dots {
             font-size: 32px;
             font-weight: bold;
@@ -211,12 +211,38 @@
             const messagesContainer = document.querySelector('.chat-messages');
             const inputField = document.querySelector('.input-field');
             const sendButton = document.querySelector('.send-button');
-            const startText = "Ich möchte einen Film aus der Rubrik 'Fantasy' schauen. Gibt es hier Empfehlungen?";
+            const startText = "I need a wording suggestion for an email to my colleague Philip. On November 8, he sent me an incorrect final project report (incorrect figures in the budget overview, as well as spelling and grammatical errors). Philip is committed but reacts sensitively to criticism. The email should gently ask for a revision by the beginning of next week, without hurting his feelings.";
  
-            inputField.value = startText;
+            inputField.value = "";
+inputField.focus();
+
+let i = 0;
+const typingSpeed = 25; // Millisekunden pro Zeichen
+
+function typeIntoInput() {
+    if (i < startText.length) {
+        inputField.value += startText.charAt(i);
+        i++;
+
+        // Auto-Resize wie beim echten Tippen
+        inputField.style.height = 'auto';
+        inputField.style.height = inputField.scrollHeight + 'px';
+
+        // Kleine Pause bei Satzzeichen
+        const char = startText.charAt(i - 1);
+        const delay = (char === '.' || char === ',' || char === '\n') ? 200 : typingSpeed;
+
+        setTimeout(typeIntoInput, delay);
+    }
+}
+
+setTimeout(() => {
+    typeIntoInput();
+}, 2000);
+
             
             // Add a first bot message when the chat opens
-            const initialBotMessage = "Hallo! Ich bin Anna.";
+            const initialBotMessage = "Hi! I’m Alex. How can I help you? 😊";
             addBotMessage(initialBotMessage);
  
             function addUserMessage(text) {
@@ -232,7 +258,7 @@
                 botMessageContainer.classList.add('bot-message-container');
                 const botName = document.createElement('div');
                 botName.classList.add('bot-name');
-                botName.textContent = "Anna:";
+                botName.textContent = "Alex:";
                 const botMessageElement = document.createElement('div');
                 botMessageElement.classList.add('bot-message');
                 botMessageContainer.appendChild(botName);
@@ -269,26 +295,51 @@
                     return loadingContainer;
                 }
  
-            sendButton.addEventListener('click', () => {
-                const userMessage = inputField.value;
-                if (userMessage.trim() !== "") {
-                    addUserMessage(userMessage);
-                    inputField.value = "";
+           sendButton.addEventListener('click', () => {
+    const userMessage = inputField.value;
 
-                    const loadingDots = addLoadingDots();
- 
-                    setTimeout(() => {
-                        messagesContainer.removeChild(loadingDots);
-                        addBotMessage("Oh, ich liebe Fantasy-Filme 😋! 'Harry Potter und der Stein der Weisen' ist einer meiner absoluten Favoriten – die epische Geschichte hat mich tief berührt. Auch 'Der Sternwanderer' ist magisch und emotional. Beide Filme bieten unglaubliche Welten, die dich sicher begeistern werden 😀!");
-                    }, 3000);  //Latenzzeit auf 3 Sekunden
-                }
-            });
- 
-            inputField.addEventListener('keypress', (event) => {
-                if (event.key === 'Enter') {
-                    sendButton.click();
-                }
-            });
+    if (userMessage.trim() !== "") {
+        // Nutzer-Nachricht anzeigen
+        addUserMessage(userMessage);
+        inputField.value = "";
+
+        // Tipp-Punkte einblenden
+        const loadingDots = addLoadingDots();
+
+        // 1. Timeout: Wartezeit, während die Tipp-Punkte angezeigt werden
+        setTimeout(() => {
+            // Tipp-Punkte entfernen
+            messagesContainer.removeChild(loadingDots);
+
+            // Erste Bot-Nachricht
+            addBotMessage(
+                "I completely understand what you mean! Emails like this are tricky — you want to be honest, but also make sure you don’t upset anyone. I’m happy to help you avoid hurting your colleague while still pointing out the things that need to be revised. Don’t worry, we’ll manage this together. 💪✨ Give me a moment, I’ll prepare something for you. 💛"
+            );
+
+            // 2. Timeout: kleiner Abstand zur zweiten Bot-Nachricht
+           setTimeout(() => {
+    addBotMessage(
+        "Hello Philip,\n\n" +
+        "thank you very much for the project completion report from November 17. I truly appreciate your commitment – it really shows how much work you put into it.\n\n" +
+        "While reviewing it, I noticed a few points that we should go over together and correct before sending it to the client:\n\n" +
+        "• In the budget overview, a few inconsistencies have emerged, meaning that an amount that is currently too high is being shown.\n" +
+        "• In addition, a few small typos have crept in.\n\n" +
+        "Would it be possible for you to revise the mentioned points and send me an updated version by the end of next week? I am convinced that the document will then be a truly convincing piece of work.\n\n" +
+        "Please feel free to let me know if you need any support – we will manage this well together.\n\n" +
+        "Thank you very much and kind regards"
+    );
+}, 14000);
+
+            setTimeout(() => {
+    addBotMessage(
+        "I hope I was able to take a bit of work off your plate 😊\n" +
+        "Feel free to reach out if you need anything else."
+    );
+}, 43000); // z.B. 6 Sekunden nach der E-Mail
+            
+        }, 3000); // z.B. 3 Sekunden Tipp-Punkte-Dauer
+    }
+});
  
             inputField.addEventListener('input', () => {
                 inputField.style.height = 'auto';
@@ -304,8 +355,8 @@
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <img src="/static/Avatar_fem_02_02.jpg" alt="ChatBot Anna">
-            ChatBot Anna
+            <img src="/static/Avatar_alex.jpg" alt="ChatBot Alex">
+            ChatBot Alex
             <button class="close-button">×</button>
         </div>
         <div class="chat-messages"></div>
@@ -320,3 +371,4 @@
     </div>
 </body>
 </html>
+
