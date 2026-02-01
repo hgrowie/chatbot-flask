@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot Alex</title>
+    <title>ChatBot Gen2</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -99,25 +99,7 @@
     font-family: Arial, sans-serif;
     white-space: pre-line;
 }
-        .loading-dots {
-            font-size: 32px;
-            font-weight: bold;
-            margin-left: 10px;
-            color: #007bff;
-            display: inline-block;
-        }
-
-        .loading-dots span {
-            animation: blink 1s infinite;
-        }
-
-        .loading-dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+    
 
         @keyframes blink {
             0% {
@@ -239,11 +221,7 @@ function typeIntoInput() {
 setTimeout(() => {
     typeIntoInput();
 }, 2000);
-
             
-            // Add a first bot message when the chat opens
-            const initialBotMessage = "Hi! I’m Alex. How can I help you? 😊";
-            addBotMessage(initialBotMessage);
  
             function addUserMessage(text) {
                 const userMessageContainer = document.createElement('div');
@@ -258,7 +236,7 @@ setTimeout(() => {
                 botMessageContainer.classList.add('bot-message-container');
                 const botName = document.createElement('div');
                 botName.classList.add('bot-name');
-                botName.textContent = "Alex:";
+                botName.textContent = "ChatBot Gen2:";
                 const botMessageElement = document.createElement('div');
                 botMessageElement.classList.add('bot-message');
                 botMessageContainer.appendChild(botName);
@@ -279,46 +257,24 @@ setTimeout(() => {
                     typeMessage();
             }
 
-
-             function addLoadingDots() {
-                    const loadingContainer = document.createElement('div');
-                    loadingContainer.classList.add('bot-message-container');
-
-                    const loadingDots = document.createElement('div');
-                    loadingDots.classList.add('loading-dots');
-                    loadingDots.innerHTML = '<span>.</span><span>.</span><span>.</span>';
-
-                    loadingContainer.appendChild(loadingDots);
-                    messagesContainer.appendChild(loadingContainer);
-                    scrollToBottom();
-
-                    return loadingContainer;
-                }
  
-           sendButton.addEventListener('click', () => {
-    const userMessage = inputField.value;
+          sendButton.addEventListener('click', () => {
+  const userMessage = inputField.value;
 
-    if (userMessage.trim() !== "") {
-        // Nutzer-Nachricht anzeigen
-        addUserMessage(userMessage);
-        inputField.value = "";
+  if (userMessage.trim() !== "") {
+    addUserMessage(userMessage);
+    inputField.value = "";
 
-        // Tipp-Punkte einblenden
-        const loadingDots = addLoadingDots();
+    // optional: Tipp-Pause
+    setTimeout(() => {
+      // Bot-Nachricht 1
+      addBotMessage(
+        "The provided information is now being processed. Based on the entered information, a factual and information-oriented email draft will be generated automatically. The draft is based exclusively on the content provided. Processing is automated and may take a short moment."
+      );
 
-        // 1. Timeout: Wartezeit, während die Tipp-Punkte angezeigt werden
-        setTimeout(() => {
-            // Tipp-Punkte entfernen
-            messagesContainer.removeChild(loadingDots);
-
-            // Erste Bot-Nachricht
-            addBotMessage(
-                "I completely understand what you mean! Emails like this are tricky — you want to be honest, but also make sure you don’t upset anyone. I’m happy to help you avoid hurting your colleague while still pointing out the things that need to be revised. Don’t worry, we’ll manage this together. 💪✨ Give me a moment, I’ll prepare something for you. 💛"
-            );
-
-            // 2. Timeout: kleiner Abstand zur zweiten Bot-Nachricht
-           setTimeout(() => {
-    addBotMessage(
+      // Bot-Nachricht 2 (E-Mail-Entwurf)
+      setTimeout(() => {
+        addBotMessage(
         "Hello Philip,\n\n" +
         "thank you very much for the project completion report from November 17. I truly appreciate your commitment – it really shows how much work you put into it.\n\n" +
         "While reviewing it, I noticed a few points that we should go over together and correct before sending it to the client:\n\n" +
@@ -327,13 +283,12 @@ setTimeout(() => {
         "Would it be possible for you to revise the mentioned points and send me an updated version by the end of next week? I am convinced that the document will then be a truly convincing piece of work.\n\n" +
         "Please feel free to let me know if you need any support – we will manage this well together.\n\n" +
         "Thank you very much and kind regards"
-    );
-}, 14000);
-
+        );
+      }, 14000); // <- Abstand zwischen Bot-Nachricht 1 und 2
             setTimeout(() => {
     addBotMessage(
-        "I hope I was able to take a bit of work off your plate 😊\n" +
-        "Feel free to reach out if you need anything else."
+  "The email draft is complete.\n" +
+        "If needed, the text can be further adjusted."
     );
 }, 43000); // z.B. 6 Sekunden nach der E-Mail
             
@@ -355,8 +310,8 @@ setTimeout(() => {
 <body>
     <div class="chat-container">
         <div class="chat-header">
-            <img src="/static/Avatar_alex.jpg" alt="ChatBot Alex">
-            ChatBot Alex
+            <img src="/static/ki-bild-2.jpg" alt="ChatBot Gen2">
+            ChatBot Gen2
             <button class="close-button">×</button>
         </div>
         <div class="chat-messages"></div>
@@ -371,4 +326,5 @@ setTimeout(() => {
     </div>
 </body>
 </html>
+
 
